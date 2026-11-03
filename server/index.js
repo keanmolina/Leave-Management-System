@@ -13,7 +13,13 @@ const PORT = process.env.PORT || 10000;
 
 // Middlewares
 app.use(cors({
-  origin: ['https://leave-management-system-owqvq43bu-molina20.vercel.app', 'http://localhost:3000', 'http://localhost:5173'],
+  origin: (origin, callback) => {
+    if (!origin || origin.endsWith('.vercel.app') || origin.includes('localhost')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
